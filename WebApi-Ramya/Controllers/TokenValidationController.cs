@@ -23,7 +23,7 @@ namespace WebApi_Ramya.Controllers
             // -----------------------------
             // Protected endpoint (JWT token required)
             // -----------------------------
-            [Authorize]
+            
             [HttpGet("protected")]
             public IActionResult ProtectedEndpoint()
             {
@@ -50,39 +50,3 @@ namespace WebApi_Ramya.Controllers
         }
     }
 
-
-    /*✅ Your static token
-    private const string StaticToken = "MyStaticToken123"; // change as needed
-
-    // 🔹 Public endpoint (no token required)
-    [HttpGet("public")]
-    public IActionResult PublicEndpoint()
-    {
-        return Ok("Public endpoint — no token required.");
-    }
-
-    // 🔹 Secure endpoint (requires static token)
-    [HttpGet("secure")]
-    public IActionResult SecureEndpoint()
-    {
-        // Read Authorization header
-        if (!Request.Headers.TryGetValue("Authorization", out var authHeader))
-        {
-            return Unauthorized("Authorization header missing");
-        }
-
-        // Extract token from header
-        var token = authHeader.ToString().Replace("Bearer ", "", StringComparison.OrdinalIgnoreCase);
-
-        // Validate token
-        if (token != StaticToken)
-        {
-            return Unauthorized("Invalid token");
-        }
-
-        // ✅ Token valid
-        return Ok("Secure endpoint accessed successfully!");*/
-
-
-
-        
