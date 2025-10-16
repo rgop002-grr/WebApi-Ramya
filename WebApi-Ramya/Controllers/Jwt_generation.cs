@@ -13,11 +13,15 @@ namespace WebApi_Ramya.Controllers
     {
        
        
-            [HttpGet("generate")]
-            public IActionResult GenerateToken()
+            [HttpPost("generate")]
+            public IActionResult GenerateToken([FromBody] LoginRequest request)
             {
-                // --- Static secret key (must be at least 32 characters for HS256) ---
-                var secretKey = "ThisIsAStaticSecretKeyForJwtToken123!";
+                if (string.IsNullOrEmpty(request.Username) || string.IsNullOrEmpty(request.Role))
+                return BadRequest("Username and Role are required!");
+
+
+            // --- Static secret key (must be at least 32 characters for HS256) ---
+            var secretKey = "ThisIsAStaticSecretKeyForJwtToken123!";
 
                 // --- Create static claims (static data) ---
                 var claims = new[]
