@@ -12,14 +12,13 @@ namespace WebApi_Ramya.Controllers
     [ApiController]
     public class RefreshToken : ControllerBase
     {
-        
-        
+       
             private readonly IConfiguration _config;
 
-            // Store refresh tokens temporarily (for demo purpose)
+            // Store refresh tokens temporarily (for demo)
             private static List<(string Username, string RefreshToken)> _refreshTokens = new();
 
-            public RefreshToken(IConfiguration config)
+        public RefreshToken(IConfiguration config)
             {
                 _config = config;
             }
@@ -31,8 +30,8 @@ namespace WebApi_Ramya.Controllers
                 if (request == null)
                     return BadRequest("Request body is missing!");
 
-            // Dummy user validation (replace with DB check)
-            if (request.Username != "ramya"|| request.Password != "1234")
+                // Dummy validation
+                if (request.Username != "ramya" || request.Password != "1234")
                     return Unauthorized("Invalid username or password!");
 
                 var tokens = GenerateTokens(request.Username);
@@ -41,36 +40,48 @@ namespace WebApi_Ramya.Controllers
 
             // ---------------- REFRESH TOKEN ----------------
             [HttpPost("refresh")]
-            public IActionResult TokenResponse([FromBody] TokenResponse request)
+        
+        public IActionResult Refresh([FromBody] TokenResponse request)
+        {
+            if (request == null)
+                return BadRequest("Request body is missing!");
+
+            // Check if user and refresh token exist
+            var storedToken = _refreshTokens.FirstOrDefault(u => u.Username == request.Username);
+
+            if (storedToken == default || storedToken.RefreshToken != request.RefreshToken)
+                return Unauthorized("Invalid refresh token!");
+
+            // ✅ Generate a new Access Token only (don’t generate refresh token again)
+            var newAccessToken = GenerateTokens(request.Username);
+
+            // ✅ Return only the new Access Token
+            return Ok(new { AccessToken = newAccessToken });
+        }
+
+
+        // ---------------- TOKEN GENERATION METHOD ----------------
+        private TokenResponse GenerateTokens(string username)
             {
-                if (request == null)
-                    return BadRequest("Request body is missing!");
-
-                // Validate refresh token
-                var storedToken = _refreshTokens.FirstOrDefault(u => u.Username == request.Username);
-
-                if (storedToken == default || storedToken.RefreshToken != request.RefreshToken)
-                    return Unauthorized("Invalid refresh token!");
-
-                // Generate new tokens
-                var newTokens = GenerateTokens(request.Username);
-                return Ok(newTokens);
-            }
-
-            // ---------------- TOKEN GENERATION METHOD ----------------
-            private TokenResponse GenerateTokens(string username)
-            {
-                var key = Encoding.UTF8.GetBytes(_config["Jwt:Key"] ?? "ThisIsASecretKeyForJwtToken123!");
+                var key = Encoding.UTF8.GetBytes(_config["Jwt:Key"]);
                 var tokenHandler = new JwtSecurityTokenHandler();
+
+                var now = DateTime.UtcNow;
 
                 var tokenDescriptor = new SecurityTokenDescriptor
                 {
                     Subject = new ClaimsIdentity(new[]
                     {
                     new Claim(ClaimTypes.Name, username),
-                    new Claim("Department", "DotNetTeam")
+                    new Claim(ClaimTypes.Role, "Admin")
                 }),
-                    Expires = DateTime.UtcNow.AddMinutes(2), // short for demo
+                    Issuer = _config["Jwt:Issuer"],
+                    Audience = _config["Jwt:Audience"],
+
+                    NotBefore = now,
+                    IssuedAt = now,
+                    Expires = now.AddMinutes(2),
+
                     SigningCredentials = new SigningCredentials(
                         new SymmetricSecurityKey(key),
                         SecurityAlgorithms.HmacSha256Signature)
@@ -79,10 +90,8 @@ namespace WebApi_Ramya.Controllers
                 var token = tokenHandler.CreateToken(tokenDescriptor);
                 var accessToken = tokenHandler.WriteToken(token);
 
-                // Generate a new refresh token
                 string refreshToken = Guid.NewGuid().ToString();
 
-                // Save or update refresh token
                 var existing = _refreshTokens.FirstOrDefault(u => u.Username == username);
                 if (existing != default)
                     _refreshTokens.Remove(existing);
@@ -97,9 +106,5 @@ namespace WebApi_Ramya.Controllers
                 };
             }
         }
-
     }
 
-       
-
-    
