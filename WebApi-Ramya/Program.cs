@@ -1,10 +1,29 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using WebApi_Ramya.Business_Layer;
+using WebApi_Ramya.Models;
+using WebApi_Ramya.Repository_Layer.DataAccess;
+using WebApi_Ramya.Repository_Layer;
+
+
+
+
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddDbContext<TestDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+
+// -------------------- DEPENDENCY INJECTION --------------------
+
+// Repository Layer
+builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+
+// Business Layer
+builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 // Add Controllers
 builder.Services.AddControllers();
 
