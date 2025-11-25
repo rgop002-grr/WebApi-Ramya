@@ -7,6 +7,7 @@ using WebApi_Ramya.Business_Layer;
 using WebApi_Ramya.Models;
 using WebApi_Ramya.Repository_Layer.DataAccess;
 using WebApi_Ramya.Repository_Layer;
+using WebApi_Ramya.Services_Lifetime;
 
 
 
@@ -24,6 +25,16 @@ builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 
 // Business Layer
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+
+builder.Services.AddSingleton<IOperationSingleton, OperationService>();   // Only once
+builder.Services.AddScoped<IOperationScoped, OperationService>();         // Per Request
+builder.Services.AddTransient<IOperationTransient, OperationService>();   // Every resolve
+
+builder.Services.AddControllers();
+
+
+
+
 // Add Controllers
 builder.Services.AddControllers();
 
