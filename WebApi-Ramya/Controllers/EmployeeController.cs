@@ -8,13 +8,13 @@ namespace WebApi_Ramya.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PresentationController : ControllerBase
+    public class EmployeeController : ControllerBase
     {
        
 
             private readonly IEmployeeService _employeeService;
 
-            public PresentationController(IEmployeeService employeeService)
+            public EmployeeController(IEmployeeService employeeService)
             {
                 _employeeService = employeeService;
             }
