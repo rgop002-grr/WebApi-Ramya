@@ -1,13 +1,16 @@
-﻿using System.Collections.Generic;
-using WebApi_Ramya.Models;
-using Microsoft.EntityFrameworkCore;
+﻿using WebApi_Ramya.Models;
 
-namespace WebApi_Ramya.Repository_Layer
+
+
+
+namespace WebApi_Ramya.DataBaseLayer
 {
-    namespace DataAccess
+    public class EmployeeRepository: IEmployeeRepository
     {
-        public class EmployeeRepository : IEmployeeRepository
-        {
+ 
+
+
+       
             private readonly TestDbContext _context;
 
             public EmployeeRepository(TestDbContext context)
@@ -53,5 +56,7 @@ namespace WebApi_Ramya.Repository_Layer
             }
         }
     }
-}
-    
+                 
+
+
+         

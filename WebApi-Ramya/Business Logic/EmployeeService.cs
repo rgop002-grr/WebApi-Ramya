@@ -1,13 +1,16 @@
-﻿using static WebApi_Ramya.Business_Layer.EmployeeService;
+﻿using WebApi_Ramya.DataBaseLayer;
 using WebApi_Ramya.Models;
-using WebApi_Ramya.Repository_Layer;
 
-namespace WebApi_Ramya.Business_Layer
+
+
+
+namespace WebApi_Ramya.Business_Logic
 {
-    public class EmployeeService: IEmployeeService
+    public class EmployeeService:IEmployeeService
+
     {
-        
-            private readonly IEmployeeRepository _employeeRepository;
+       
+           private readonly IEmployeeRepository _employeeRepository;
 
             public EmployeeService(IEmployeeRepository employeeRepository)
             {
@@ -47,5 +50,5 @@ namespace WebApi_Ramya.Business_Layer
     }
 
 
-       
-           
+
+

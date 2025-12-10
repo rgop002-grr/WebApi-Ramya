@@ -5,10 +5,9 @@ namespace WebApi_Ramya.Models;
 
 public partial class Employee
 {
-   
-     public int EmpId { get; set; }
+    public int EmpId { get; set; }
 
-     public int DeptId { get; set; }
+    public int DeptId { get; set; }
 
     public string EmpName { get; set; } = null!;
 
@@ -18,4 +17,3 @@ public partial class Employee
 
     public virtual Department Dept { get; set; } = null!;
 }
-

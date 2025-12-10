@@ -1,11 +1,13 @@
-﻿using WebApi_Ramya.Models;
+﻿
+using WebApi_Ramya.Models;
 
-namespace WebApi_Ramya.Business_Layer
+
+namespace WebApi_Ramya.DataBaseLayer
 {
-    public interface IEmployeeService
+    public interface IEmployeeRepository
     {
-       
-      
+    
+  
             IEnumerable<Employee> GetAll();
             Employee? GetById(int id);
             Employee? GetByName(string name);
@@ -14,5 +16,7 @@ namespace WebApi_Ramya.Business_Layer
             void Delete(int id);
         }
     }
+
+
 
 

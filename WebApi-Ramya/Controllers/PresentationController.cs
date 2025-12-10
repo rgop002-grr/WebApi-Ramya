@@ -1,18 +1,20 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using WebApi_Ramya.Business_Layer;
+using Microsoft.EntityFrameworkCore;
+using WebApi_Ramya.Business_Logic;
 using WebApi_Ramya.Models;
 
 namespace WebApi_Ramya.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PresentationLayer : ControllerBase
+    public class PresentationController : ControllerBase
     {
+       
 
-             private readonly IEmployeeService _employeeService;
+            private readonly IEmployeeService _employeeService;
 
-            public PresentationLayer(IEmployeeService employeeService)
+            public PresentationController(IEmployeeService employeeService)
             {
                 _employeeService = employeeService;
             }
@@ -49,16 +51,44 @@ namespace WebApi_Ramya.Controllers
                 return Ok(emp);
             }
 
-            // POST: api/Employee
-            [HttpPost]
-            public IActionResult Add(Employee employee)
-            {
-                _employeeService.Add(employee);
-                return Ok("Employee Added Successfully");
-            }
+        // POST: api/Employee
+        /*[HttpPost]
+         public IActionResult Add(Employee employee)
+         {
+             _employeeService.Add(employee);
+             return Ok("Employee Added Successfully");
+         }*/
+        [HttpPost]
+        public IActionResult Add([FromBody] EmployeeDto employeeDto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-            // PUT: api/Employee
-            [HttpPut]
+            // Convert DTO → Entity
+            var employee = new Employee
+            {
+                EmpName = employeeDto.EmpName,
+                EmpSalary = employeeDto.EmpSalary,
+                DeptId = employeeDto.DeptId
+            };
+
+            _employeeService.Add(employee);
+
+            return Ok("Employee Added Successfully");
+        }
+
+
+
+
+
+
+
+
+
+
+
+        // PUT: api/Employee
+        [HttpPut]
             public IActionResult Update(Employee employee)
             {
                 _employeeService.Update(employee);
@@ -77,4 +107,6 @@ namespace WebApi_Ramya.Controllers
 
 
 
-        
+
+
+
