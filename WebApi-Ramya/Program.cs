@@ -8,6 +8,8 @@ using WebApi_Ramya.Models;
 
 
 using WebApi_Ramya.DataBaseLayer;
+using WebApi_Ramya.Services;
+using System;
 
 
 
@@ -15,6 +17,13 @@ using WebApi_Ramya.DataBaseLayer;
 
 
 var builder = WebApplication.CreateBuilder(args);
+// --- Register DI services with lifetimes ---
+builder.Services.AddSingleton<IOperationSingleton, OperationService>();   // one instance for app lifetime
+builder.Services.AddScoped<IOperationScoped, OperationService>();         // one instance per request
+builder.Services.AddTransient<IOperationTransient, OperationService>();   // new instance every resolve
+
+
+
 builder.Services.AddDbContext<TestDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
